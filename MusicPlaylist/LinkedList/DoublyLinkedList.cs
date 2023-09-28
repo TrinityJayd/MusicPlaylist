@@ -11,6 +11,8 @@ namespace MusicPlaylist.LinkedList
         private Node head;
         private Node tail;
         private Node current;
+        private Node previous;
+
 
         //Add a new node to the end of the list
         public void AddNode(string songName, string artistName, TimeSpan duration)
@@ -62,6 +64,11 @@ namespace MusicPlaylist.LinkedList
                         current.Previous.Next = current.Next;
                         current.Next.Previous = current.Previous;
                     }
+
+                    if (current == this.current)
+                        this.current = current.Next;
+
+                    return;
                 }
                 current = current.Next;
             }
@@ -72,12 +79,21 @@ namespace MusicPlaylist.LinkedList
         {
             if (current == null)
             {
-                return null;
+                if(head != null)
+                {
+                    current = head.Next;
+                    return head.Data;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
+                previous = current.Previous;
                 Song song = current.Data;
-                current = current.Next;
+                current = current.Next;               
                 return song;
             }
         }
@@ -85,30 +101,27 @@ namespace MusicPlaylist.LinkedList
         //Get the previous node in the list
         public Song GetPreviousNode()
         {
-            if (current == null)
+            if (previous == null)
             {
                 return null;
             }
             else
             {
-                Song song = current.Data;
-                current = current.Previous;
+                Song song = previous.Data;
+                previous = previous.Previous;
+                if(current != null)
+                {
+                    current = current.Previous;
+                }
+                else
+                {
+                    current = previous;
+                }
+                
                 return song;
             }
         }
 
-        //Get the current node in the list
-        public Song GetCurrentNode()
-        {
-            if (current == null)
-            {
-                return null;
-            }
-            else
-            {
-                return current.Data;
-            }
-        }
 
         //Get the first node in the list
         public Song GetFirstNode()
@@ -134,6 +147,12 @@ namespace MusicPlaylist.LinkedList
             {
                 return tail.Data;
             }
+        }
+
+        //set the current node to the first node in the list
+        public void ResetCurrent()
+        {
+            current = head;
         }
 
         //Shuffle the list
@@ -169,21 +188,6 @@ namespace MusicPlaylist.LinkedList
                 current = current.Next;
             }
 
-        }
-
-        public Song GetSong(string songName)
-        {
-            Node current = head;
-
-            while (current != null)
-            {
-                if (current.Data.Title == songName)
-                {
-                    return current.Data;
-                }
-                current = current.Next;
-            }
-            return null;
         }
     }
 }

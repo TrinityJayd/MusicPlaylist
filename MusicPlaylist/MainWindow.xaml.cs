@@ -20,16 +20,13 @@ namespace MusicPlaylist
             PlaylistCollection = new ObservableCollection<Song>();
             //Add each node to the observable collection
             Song current = playlist.GetNextNode();
-            currentSongTxt.Text = $"Title: \t\t{current.Title}\n" +
-                $"Artist: \t\t{current.Artist}\n" +
-                $"Duration: \t{current.Duration}";
 
             while (current != null)
             {
                 PlaylistCollection.Add(current);
                 current = playlist.GetNextNode();
             }
-
+            playlist.ResetCurrent();
 
             listBox.ItemsSource = PlaylistCollection;
             DataContext = this;
@@ -106,8 +103,6 @@ namespace MusicPlaylist
 
         private void BackBtn_Click(object sender, RoutedEventArgs e)
         {
-            Song currentSong = playlist.GetCurrentNode();
-
             // Get the previous song in the playlist
             Song previousSong = playlist.GetPreviousNode();
 
@@ -123,9 +118,6 @@ namespace MusicPlaylist
 
         private void NextBtn_Click(object sender, RoutedEventArgs e)
         {
-            Song currentSong = playlist.GetCurrentNode();
-
-            // Get the next song in the playlist
             Song nextSong = playlist.GetNextNode();
 
             if (nextSong != null)
